@@ -3,7 +3,8 @@ export { pluginMap, pluginWrap, pluginConstructorMap } from './helpers'
 
 import pluginA from './pluginA'
 import buttonWidget from './buttonWidget'
+import inputWidget from './inputWidget'
 
-usePlugin('pluginA', pluginA)
+usePlugin('inputWidget', inputWidget)
 usePlugin('buttonWidget', buttonWidget)
-
+usePlugin('pluginA', pluginA)
