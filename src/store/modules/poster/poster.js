@@ -500,6 +500,8 @@ const actions = {
             res => {
                 Message.success('保存成功')
                 commit(MTS.SET_UNSAVED_STATE, false)
+                // 保存到 localStorage
+                localStorage.setItem('pageConfigData', JSON.stringify(requestData))
                 return res
             },
             () => {

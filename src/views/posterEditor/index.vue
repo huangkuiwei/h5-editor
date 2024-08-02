@@ -26,6 +26,8 @@ import extendSideBar from './extendSideBar'
 import layerPanel from './extendSideBar/layerPanel'
 import store from '@/store'
 import posterModule from '@/store/modules/poster/poster'
+import BackgroundWidget from './widgetConstructor/backgroundWidget'
+import { DrawRectWidget, ImageWidget, TextWidget } from 'poster/widgetConstructor'
 
 const DELETE_KEY = 8 // delete
 const COPY_KEY = 67 // c
@@ -91,6 +93,27 @@ export default {
     })
     await this.resetState()
     loading.close()
+
+    // 本地保存的数据回显
+    let pageConfigDataStr = localStorage.getItem('pageConfigData')
+    if (pageConfigDataStr) {
+      let pageConfigData = JSON.parse(pageConfigDataStr)
+      let items = pageConfigData.items
+
+      this.replacePosterItems(items.slice(1).map(item => {
+        if (item.type === 'image') {
+          return new ImageWidget(JSON.parse(item.config))
+        } else if (item.type === 'text') {
+          return new TextWidget(JSON.parse(item.config))
+        }else if (item.type === 'rect') {
+          return new DrawRectWidget(JSON.parse(item.config))
+        }
+      }))
+
+      let background = JSON.parse(items[0].config)
+      this.addBackground(new BackgroundWidget(background))
+    }
+
     this.initLoading = false
   },
   async mounted() {
@@ -110,7 +133,8 @@ export default {
       'copyWidget',
       'setLayerPanel',
       'setReferenceLineVisible',
-      'resetState'
+      'resetState',
+      'addBackground'
     ]),
     ...mapActions({
       undo: 'history/undo',
